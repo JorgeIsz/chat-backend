@@ -1,16 +1,24 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+import models
+
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
-    return "Yes!"
+    return "Hello World!"
 
 mensajes = []
-usuarios = 0
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -22,4 +30,4 @@ def handleMessage(msg):
     emit('message', mensajes,broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app,host="localhost")
+    socketio.run(app,host="localhost",debug=True)
