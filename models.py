@@ -9,3 +9,13 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User '{self.username}>"
+
+class Mensaje(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    texto = db.Column(db.String(240),nullable=False)
+    estado = db.Column(db.Boolean,default=True)
+    room = db.Column(db.String(100),nullable=True)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
