@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object('config')
