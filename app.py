@@ -46,25 +46,16 @@ def on_leave(data):
 
 
 @socketio.on('mensaje-entra')
-def on_mensaje_entra(data):
-    texto = data["texto"]
-    username = data["username"]
-    room = data["room"]
+def on_mensaje_entra(msg):
+    texto = msg["texto"]
+    usuario = msg["usuario"]
+    room = msg["room"]
     respuesta = {
         'texto':texto,
-        'username':username
-    }
-    send(respuesta, room=room)
-
-
-@socketio.on('message')
-def handleMessage(msg):
-    respuesta = {
-        'texto':msg['texto'],
-        'usuario':msg['usuario']
+        'usuario':usuario
     }
     mensajes.append(respuesta)
-    emit('message', mensajes,broadcast=True,room="testroom")
+    send(mensajes, room=room)
 
 
 if __name__ == '__main__':
