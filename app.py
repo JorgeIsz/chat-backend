@@ -46,6 +46,19 @@ def on_leave(data):
     leave_room(room)
     send(username + ' has left the room.', room=room)
 
+
+@socketio.on('mensaje-entra')
+def on_mensaje_entra(data):
+    texto = data["texto"]
+    username = data["username"]
+    room = data["room"]
+    respuesta = {
+        'texto':texto
+        'username':username
+    }
+    send(respuesta, room=room)
+
+
 @socketio.on('message')
 def handleMessage(msg):
     respuesta = {
@@ -54,6 +67,7 @@ def handleMessage(msg):
     }
     mensajes.append(respuesta)
     emit('message', mensajes,broadcast=True,room="testroom")
+
 
 if __name__ == '__main__':
     socketio.run(app,host="localhost",debug=True)
