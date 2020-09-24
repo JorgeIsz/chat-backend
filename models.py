@@ -1,5 +1,5 @@
-from main import db
-from main import login_manager
+from app import db
+from app import login_manager
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
