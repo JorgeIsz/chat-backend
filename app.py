@@ -51,7 +51,7 @@ def on_mensaje_entra(data):
     username = data["username"]
     room = data["room"]
     respuesta = {
-        'texto':texto
+        'texto':texto,
         'username':username
     }
     send(respuesta, room=room)
@@ -68,4 +68,4 @@ def handleMessage(msg):
 
 
 if __name__ == '__main__':
-    socketio.run(app,host="localhost",debug=True)
+    socketio.run(app,debug=True)
