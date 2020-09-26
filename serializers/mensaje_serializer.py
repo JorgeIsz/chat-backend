@@ -3,7 +3,7 @@ class SerializerFactory:
         raise NotImplementedError("Metodo get_serializer no implementado")
 
 class MensajeSerializerFactory(SerializerFactory):
-        def get_serializer(many:bool):
+        def get_serializer(self,many):
             if(many): 
                 return ListaMensajesSerializer()
             else:

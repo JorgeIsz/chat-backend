@@ -2,6 +2,9 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from serializers.mensaje_serializer import MensajeSerializerFactory 
+
+msg_srlr = MensajeSerializerFactory()
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -61,7 +64,9 @@ def on_mensaje_entra(msg):
         )
     nuevo_mensaje.save()
     mensajes = Mensaje.query.all()
-    send(mensajes, room=msg["room"])
+    serializer = msg_srlr.get_serializer(True)
+
+    send(serializer.data(mensajes), room=msg["room"])
 
 @socketio.on('estado-cambiado')
 def on_estado_cambiado(data):
