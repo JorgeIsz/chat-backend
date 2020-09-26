@@ -12,11 +12,19 @@ login_manager.init_app(app)
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+class Mensaje(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    texto = db.Column(db.String(240),nullable=False)
+    estado = db.Column(db.Boolean,default=True)
+    room = db.Column(db.String(100),nullable=True)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 @app.route('/')
 def index():
     return "Hello World!"
-
-mensajes = []
 
 @socketio.on('connect')
 def test_connect():
@@ -47,15 +55,27 @@ def on_leave(data):
 
 @socketio.on('mensaje-entra')
 def on_mensaje_entra(msg):
-    texto = msg["texto"]
-    usuario = msg["usuario"]
-    room = msg["room"]
+    nuevo_mensaje = Mensaje(
+        texto = msg['texto'],
+        room = msg['room']
+        )
+    nuevo_mensaje.save()
+    mensajes = Mensaje.query.all()
+    send(mensajes, room=msg["room"])
+
+@socketio.on('estado-cambiado')
+def on_estado_cambiado(data):
+    print("Cambiar",data)
+    usuario = data["usuario"]
+    estado = data["estado"]
+    room = data["room"]
     respuesta = {
-        'texto':texto,
+        'tipo':'alerta',
+        'estado':estado,
         'usuario':usuario
     }
-    mensajes.append(respuesta)
-    send(mensajes, room=room)
+    send(respuesta,room=room)
+
 
 
 if __name__ == '__main__':
