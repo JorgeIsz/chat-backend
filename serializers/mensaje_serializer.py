@@ -1,37 +1,33 @@
-class SerializerFactory:
-    def get_serializer(many:bool):
-        raise NotImplementedError("Metodo get_serializer no implementado")
-
-class MensajeSerializerFactory(SerializerFactory):
-        def get_serializer(self,many):
-            if(many): 
-                return ListaMensajesSerializer()
-            else:
-                return MensajeIndSerializer()
+# Inspirado en gran medida de la clase ModelSerializer
+# de la librería rest_framework de Django.
 
 class MensajeSerializer:
     campos = ["id","texto","room","estado"]
-    
-    def data(msg):
-        raise NotImplementedError("Método data no implementado")
 
+    def __init__(self,msg,many):
+        self.msg = msg
 
-class MensajeIndSerializer(MensajeSerializer):
-    def data(self,msg):
+        if(many): 
+            self.serializar_varios()
+        else:
+            self.serializar_uno()
+
+    def serializar_uno(self):
         dic = {}
         for c in self.campos:
-            dic[c] = getattr(msg,c)
-        return dic
+            dic[c] = getattr(self.msg,c)
+        
+        self.data = dic
 
-class ListaMensajesSerializer(MensajeSerializer):
-    def data(self,msg):
+    def serializar_varios(self):
         lista = []
-        for m in msg:
+        for m in self.msg:
             dic = {}
             for c in self.campos:
                 dic[c] = getattr(m,c)
             lista.append(dic)
         
-        return lista
+        self.data = lista
 
+        
 
